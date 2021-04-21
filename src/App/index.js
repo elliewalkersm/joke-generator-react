@@ -19,7 +19,7 @@ function App() {
       setShowPunchline(false);
       getAnotherJoke();
     } else {
-      showPunchline(true);
+      setShowPunchline(true);
     }
   };
 
