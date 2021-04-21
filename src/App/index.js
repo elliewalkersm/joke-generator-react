@@ -1,36 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.scss';
+import { Button } from 'reactstrap';
+import getJoke from '../Helpers/Data/jokeData';
 
 function App() {
-  const [domWriting, setDomWriting] = useState('Nothing Here!');
+  const [showJoke, setShowJoke] = useState();
+  const [showPunchline, setShowPunchline] = useState(false);
 
-  const handleClick = (e) => {
-    console.warn(`You clicked ${e.target.id}`);
-    setDomWriting(`You clicked ${e.target.id}! Check the Console!`);
+  const getAnotherJoke = () => {
+    getJoke()
+      .then((jokes) => {
+        setShowJoke(jokes);
+      });
   };
 
+  const handleClick = () => {
+    if (showPunchline) {
+      setShowPunchline(false);
+      getAnotherJoke();
+    } else {
+      showPunchline(true);
+    }
+  };
+
+  useEffect(() => {
+    getAnotherJoke();
+  }, []);
+
+  console.warn(showJoke);
+
   return (
-    <div className='App'>
-      <h2>INSIDE APP COMPONENT</h2>
-      <div>
-        <button
-          id='this-button'
-          className='btn btn-info'
-          onClick={handleClick}
-        >
-          I am THIS button
-        </button>
-      </div>
-      <div>
-        <button
-          id='that-button'
-          className='btn btn-primary mt-3'
-          onClick={handleClick}
-        >
-          I am THAT button
-        </button>
-      </div>
-      <h3>{domWriting}</h3>
+    <div className="App">
+      <h1>Wanna hear a joke?</h1>
+      <h2>{showJoke?.setup}</h2>
+      <p>{showPunchline && showJoke?.punchline}</p>
+      <Button color="info" onClick={handleClick}>
+        {showPunchline ? 'Get Another Joke?' : 'Get Punchline'}
+      </Button>
     </div>
   );
 }
